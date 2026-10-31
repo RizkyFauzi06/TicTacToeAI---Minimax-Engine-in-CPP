@@ -1,0 +1,8 @@
+# Build output
+*.exe
+*.o
+*.obj
+
+# Temporary files
+*.tmp
+*.log
