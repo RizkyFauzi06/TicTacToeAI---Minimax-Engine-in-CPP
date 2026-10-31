@@ -28,17 +28,15 @@ class Papan{
     int sisaturn = 0;
 
      void loadTexture(){
-    textureX = LoadTexture("X.png");
-    textureO = LoadTexture("O.png");
+    textureX = LoadTexture("assets/X.png");
+    textureO = LoadTexture("assets/O.png");
         }
 
     void gambarboard(){
     for(int i = 0 ; i < 3; i++){
-        for(int j = 0; j < 3; j++){
             DrawLine(i*cellsize, 0, i * cellsize,  cellcount * cellsize, BLACK); // vertical x awal, y awal, x akhir, y akhir
             DrawLine(0,i * cellsize, cellsize * cellcount, i * cellsize, BLACK); // horizontal x awal, y awal,x akhir, y akhir
             }
-        }
     }
 
     void DrawTextureCenter(Texture2D texture, int x, int y){
@@ -88,7 +86,7 @@ class Papan{
 
             if(centerX >= 0 && centerX < cellcount && 
                 centerY >= 0 && centerY < cellcount){ // cek apakah center nya lewat batas atau ngak.
-                if(board[centerY][centerX] == 0){ // center Y karena layar menyimpan Y kartesius ke bawah dan memori baris itu ke
+                if(board[centerY][centerX] == 0){ // center Y karena layar menyimpan Y kartesius ke bawah dan memori baris itu ke BAWAH
                         board[centerY][centerX] = id; // jadiin idpemain
                         return true;
                 }
@@ -225,8 +223,9 @@ int main(){
 
     Papan papangame;
     papangame.loadTexture();
-    Sound Suaraklik = LoadSound("Place.mp3");
-    Sound SuaraGameOver = LoadSound("GameOver.mp3");
+    Sound Suaraklik = LoadSound("assets/Place.mp3");
+    Sound SuaraGameOver = LoadSound("assets/GameOver.mp3");
+    Sound SuaraMenang = LoadSound("assets/Winner.mp3");
 
     Player Player1(1);
     Player player2(2);
@@ -331,17 +330,23 @@ int main(){
                 }
 
             papangame.gambarSimbol(board);
-            if(cekWinPlayer(board,1))
+            if(cekWinPlayer(board, 1))
             {
-                state=GAMEOVER;
-                PlaySound(SuaraGameOver);
-            }if(cekWinPlayer(board,2))
+                state = GAMEOVER;
+                PlaySound(SuaraMenang);
+            }
+            else if(cekWinPlayer(board, 2))
             {
-                state=GAMEOVER;
-                PlaySound(SuaraGameOver);
-            }if(papangame.boardFull(board))
+                state = GAMEOVER;
+
+                if(mode == VS_AI)
+                    PlaySound(SuaraGameOver);
+                else
+                    PlaySound(SuaraMenang);
+            }
+            else if(papangame.boardFull(board))
             {
-                state=GAMEOVER;
+                state = GAMEOVER;
                 PlaySound(SuaraGameOver);
             }
 
@@ -391,6 +396,7 @@ int main(){
     UnloadTexture(papangame.textureO);
     UnloadSound(Suaraklik);
     UnloadSound(SuaraGameOver);
+    UnloadSound(SuaraMenang);
     CloseAudioDevice();
     CloseWindow();
 }
